@@ -2,23 +2,22 @@ package gostats
 
 import (
 	"fmt"
-	"math/rand"
 )
 
 // This function builds a bootstrap sample by returning
 // "sample_size" sampled indices in [0,"sampled_size"[
 // with replacement
-func Bootstrap(sample_size int) (out_indices []int) {
-	return SampleWithReplacement(sample_size, sample_size)
+func (gsr *GoStatRand) Bootstrap(sample_size int) (out_indices []int) {
+	return gsr.SampleWithReplacement(sample_size, sample_size)
 }
 
 // This function builds a new sample by returning
 // "output_size" sampled indices with replacement in [0,"input_size"[
-func SampleWithReplacement(input_size, output_size int) (out_indices []int) {
+func (gsr *GoStatRand) SampleWithReplacement(input_size, output_size int) (out_indices []int) {
 	out_indices = make([]int, output_size)
 
 	for i := 0; i < output_size; i++ {
-		out_indices[i] = rand.Intn(input_size)
+		out_indices[i] = gsr.rand.Intn(input_size)
 	}
 	return out_indices
 }
@@ -30,7 +29,7 @@ func SampleWithReplacement(input_size, output_size int) (out_indices []int) {
 // This function uses the Alias Method (https://en.wikipedia.org/wiki/Alias_method)
 // The code is inspired from :
 // https://github.com/stephaneguindon/phyml/blob/a25f3decdb4c4d5d15bbbf1e2d1275d0b0493ca7/src/stats.c#L4484
-func SampleWithReplacementWeighted(weights []float64, output_size int) (out_indices []int, err error) {
+func (gsr *GoStatRand) SampleWithReplacementWeighted(weights []float64, output_size int) (out_indices []int, err error) {
 	var alias []int
 	var small, large []int
 	var prob, p []float64
@@ -108,8 +107,8 @@ func SampleWithReplacementWeighted(weights []float64, output_size int) (out_indi
 
 	var r1, r2 float64
 	for n = 0; n < output_size; n++ {
-		r1 = rand.Float64()
-		r2 = rand.Float64()
+		r1 = gsr.rand.Float64()
+		r2 = gsr.rand.Float64()
 		i = int(float64(length) * r1)
 		if r2 < prob[i] {
 			out_indices[n] = i

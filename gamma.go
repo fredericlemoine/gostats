@@ -5,21 +5,21 @@ package gostats
 import (
 	"errors"
 	"fmt"
-	"github.com/fredericlemoine/gostats/io"
 	"math"
-	"math/rand"
+
+	"github.com/fredericlemoine/gostats/io"
 )
 
 // Gamma returns a random number of gamma distribution (alpha > 0.0 and beta > 0.0)
-func Gamma(alpha, beta float64) float64 {
+func (gsr *GoStatRand) Gamma(alpha, beta float64) float64 {
 	if !(alpha > 0.0) || !(beta > 0.0) {
 		io.ExitWithMessage(errors.New(fmt.Sprintf("Invalid parameter alpha %.2f beta %.2f", alpha, beta)))
 	}
-	return gamma(alpha, beta)
+	return gsr.gamma(alpha, beta)
 }
 
 // inspired by random.py
-func gamma(alpha, beta float64) float64 {
+func (gsr *GoStatRand) gamma(alpha, beta float64) float64 {
 	var MAGIC_CONST float64 = 4 * math.Exp(-0.5) / math.Sqrt(2.0)
 	if alpha > 1.0 {
 		// Use R.C.H Cheng "The generation of Gamma variables with
@@ -30,11 +30,11 @@ func gamma(alpha, beta float64) float64 {
 		ccc := alpha + ainv
 
 		for {
-			u1 := rand.Float64()
+			u1 := gsr.rand.Float64()
 			if !(1e-7 < u1 && u1 < .9999999) {
 				continue
 			}
-			u2 := 1.0 - rand.Float64()
+			u2 := 1.0 - gsr.rand.Float64()
 			v := math.Log(u1/(1.0-u1)) / ainv
 			x := alpha * math.Exp(v)
 			z := u1 * u1 * u2
@@ -44,16 +44,16 @@ func gamma(alpha, beta float64) float64 {
 			}
 		}
 	} else if alpha == 1.0 {
-		u := rand.Float64()
+		u := gsr.rand.Float64()
 		for u <= 1e-7 {
-			u = rand.Float64()
+			u = gsr.rand.Float64()
 		}
 		return -math.Log(u) * beta
 	} else { // alpha between 0.0 and 1.0 (exclusive)
 		// Uses Algorithm of Statistical Computing - kennedy & Gentle
 		var x float64
 		for {
-			u := rand.Float64()
+			u := gsr.rand.Float64()
 			b := (math.E + alpha) / math.E
 			p := b * u
 			if p <= 1.0 {
@@ -61,7 +61,7 @@ func gamma(alpha, beta float64) float64 {
 			} else {
 				x = -math.Log((b - p) / alpha)
 			}
-			u1 := rand.Float64()
+			u1 := gsr.rand.Float64()
 			if p > 1.0 {
 				if u1 <= math.Pow(x, alpha-1.0) {
 					break

@@ -1,13 +1,23 @@
-/**
+/*
+*
 This package provides Statistical functions
 */
 package gostats
 
 import (
 	"math"
+	"math/rand"
 	"sort"
 	// "strconv"
 )
+
+type GoStatRand struct {
+	rand *rand.Rand
+}
+
+func New(rand *rand.Rand) *GoStatRand {
+	return &GoStatRand{rand: rand}
+}
 
 func Mean_int(a []int) float64 {
 	var mean float64 = 0

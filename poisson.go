@@ -3,20 +3,20 @@ package gostats
 import (
 	"errors"
 	"fmt"
-	"github.com/fredericlemoine/gostats/io"
 	"math"
-	"math/rand"
+
+	"github.com/fredericlemoine/gostats/io"
 )
 
 // Poisson returns a random number of possion distribution
-func Poisson(lambda float64) int64 {
+func (gsr *GoStatRand) Poisson(lambda float64) int64 {
 	if !(lambda > 0.0) {
 		io.ExitWithMessage(errors.New(fmt.Sprintf("Invalid lambda: %.2f", lambda)))
 	}
-	return poisson(lambda)
+	return gsr.poisson(lambda)
 }
 
-func poisson(lambda float64) int64 {
+func (gsr *GoStatRand) poisson(lambda float64) int64 {
 	// algorithm given by Knuth
 	L := math.Pow(math.E, -lambda)
 	var k int64 = 0
@@ -24,7 +24,7 @@ func poisson(lambda float64) int64 {
 
 	for p > L {
 		k++
-		p *= rand.Float64()
+		p *= gsr.rand.Float64()
 	}
 	return (k - 1)
 }

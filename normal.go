@@ -1,4 +1,4 @@
-//Largely inspired from https://github.com/leesper/go_rng/blob/master/gauss.go
+// Largely inspired from https://github.com/leesper/go_rng/blob/master/gauss.go
 package gostats
 
 import (
@@ -7,16 +7,16 @@ import (
 )
 
 // Gaussian returns a random number of gaussian distribution Gauss(mean, stddev^2)
-func Normal(mean, stddev float64) float64 {
-	return mean + stddev*gaussian()
+func (gsr *GoStatRand) Normal(mean, stddev float64) float64 {
+	return mean + stddev*gsr.gaussian()
 }
 
-func gaussian() float64 {
+func (gsr *GoStatRand) gaussian() float64 {
 	// Box-Muller Transform
 	var r, x, y float64
 	for r >= 1 || r == 0 {
-		x = Float64Range(-1.0, 1.0)
-		y = Float64Range(-1.0, 1.0)
+		x = gsr.Float64Range(-1.0, 1.0)
+		y = gsr.Float64Range(-1.0, 1.0)
 		r = x*x + y*y
 	}
 	return x * math.Sqrt(-2*math.Log(r)/r)
@@ -128,4 +128,12 @@ func Pnorm(x float64) float64 {
 	}
 	result = 0.5 + (sum/math.Sqrt(2*math.Pi))*math.Exp(-(x*x)/2)
 	return result
+}
+
+func Dnorm(value, mean, sd float64) float64 {
+	return dnorm_std((value-mean)/sd) / sd
+}
+
+func dnorm_std(value float64) float64 {
+	return math.Exp(-math.Pow(value, 2)/2) / math.Sqrt(2*math.Pi)
 }

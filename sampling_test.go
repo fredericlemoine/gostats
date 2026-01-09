@@ -13,8 +13,9 @@ func TestSampleWithReplacementWeighted(t *testing.T) {
 	weights := []float64{2., 4., 6., 8., 10.}
 	expected := []int{10000000, 20000000, 30000000, 40000000, 50000000}
 	counts := make([]int, len(expected))
+	gsr := New(rand.New(rand.NewSource(10)))
 
-	indices, err := SampleWithReplacementWeighted(weights, length)
+	indices, err := gsr.SampleWithReplacementWeighted(weights, length)
 
 	if err != nil {
 		t.Error(err)
@@ -38,8 +39,8 @@ func TestSampleWithReplacement(t *testing.T) {
 	length := 100000000
 	expected := []int{20000000, 20000000, 20000000, 20000000, 20000000}
 	counts := make([]int, len(expected))
-
-	indices := SampleWithReplacement(len(expected), length)
+	gsr := New(rand.New(rand.NewSource(10)))
+	indices := gsr.SampleWithReplacement(len(expected), length)
 
 	for _, v := range indices {
 		counts[v]++
@@ -59,9 +60,9 @@ func TestBootstrap(t *testing.T) {
 	length := 100000000
 	expected := []int{20000000, 20000000, 20000000, 20000000, 20000000}
 	counts := make([]int, len(expected))
-
+	gsr := New(rand.New(rand.NewSource(10)))
 	for is := 0; is < length/len(expected); is++ {
-		indices := Bootstrap(len(expected))
+		indices := gsr.Bootstrap(len(expected))
 		for _, v := range indices {
 			counts[v]++
 		}
