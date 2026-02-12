@@ -5,6 +5,7 @@ This package provides Statistical functions
 package gostats
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
 	"sort"
@@ -44,13 +45,64 @@ func Median_int(a []int) float64 {
 	return float64(tmp[int(math.Floor(float64(len(tmp))/2.0))]+tmp[int(math.Ceil(float64(len(tmp))/2.0))]) / 2.0
 }
 
-func Median_float(a []float64) float64 {
+func Median_float(a []float64) (m float64) {
+	tmp := make([]float64, len(a))
+	copy(tmp, a)
+	sort.Float64s(tmp)
+	idx1 := (len(tmp) + 1) * 100 / 2
+	reste := idx1 % 100
+	switch reste {
+	case 0:
+		m = 1.0 * tmp[idx1/100-1]
+	case 50:
+		m = (1.0*tmp[idx1/100-1] + 1.0*tmp[(idx1/100)]) / 2.0
+	}
+	return
+}
+
+func Q1_float(a []float64) (q1 float64) {
 	/* we don't want to modify the original vector, so work on a copy that is going
 	   to be sorted: */
 	tmp := make([]float64, len(a))
 	copy(tmp, a)
 	sort.Float64s(tmp)
-	return float64(tmp[int(math.Floor(float64(len(tmp))/2.0))]+tmp[int(math.Ceil(float64(len(tmp))/2.0))]) / 2.0
+	idx1 := (len(tmp) + 3) * 100 / 4
+	reste := idx1 % 100
+	switch reste {
+	case 0:
+		q1 = 1.0 * tmp[idx1/100-1]
+	case 25:
+		q1 = (3.0*tmp[idx1/100-1] + 1.0*tmp[(idx1/100)]) / 4.0
+	case 50:
+		q1 = (tmp[idx1/100-1] + tmp[(idx1/100)]) / 2.0
+	case 75:
+		q1 = (1.0*tmp[idx1/100-1] + 3.0*tmp[(idx1/100)]) / 4.0
+	}
+	return
+}
+
+func Q3_float(a []float64) (q3 float64) {
+	/* we don't want to modify the original vector, so work on a copy that is going
+	   to be sorted: */
+	tmp := make([]float64, len(a))
+	copy(tmp, a)
+	sort.Float64s(tmp)
+	idx1 := (3*len(tmp) + 1) * 100 / 4
+	reste := idx1 % 100
+	fmt.Println(reste)
+	fmt.Println(idx1)
+
+	switch reste {
+	case 0:
+		q3 = 1.0 * tmp[idx1/100-1]
+	case 25:
+		q3 = (3.0*tmp[idx1/100-1] + 1.0*tmp[(idx1/100)]) / 4.0
+	case 50:
+		q3 = (tmp[idx1/100-1] + tmp[(idx1/100)]) / 2.0
+	case 75:
+		q3 = (1.0*tmp[idx1/100-1] + 3.0*tmp[(idx1/100)]) / 4.0
+	}
+	return
 }
 
 func Sum_int(a []int) int {

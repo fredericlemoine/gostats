@@ -30,6 +30,12 @@ func main() {
 			fmt.Println(v)
 		}
 	}
+
+	vals := []float64{1, 11, 15, 19, 20, 24, 28, 34, 37, 47, 50, 61}
+
+	fmt.Println(gostats.Q1_float(vals))
+	fmt.Println(gostats.Q3_float(vals))
+
 	//fmt.Println(d2)
 	//fmt.Println(sum2)
 }
