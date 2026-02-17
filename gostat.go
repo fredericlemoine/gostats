@@ -5,7 +5,6 @@ This package provides Statistical functions
 package gostats
 
 import (
-	"fmt"
 	"math"
 	"math/rand"
 	"sort"
@@ -89,8 +88,6 @@ func Q3_float(a []float64) (q3 float64) {
 	sort.Float64s(tmp)
 	idx1 := (3*len(tmp) + 1) * 100 / 4
 	reste := idx1 % 100
-	fmt.Println(reste)
-	fmt.Println(idx1)
 
 	switch reste {
 	case 0:
